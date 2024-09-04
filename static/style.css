@@ -26,10 +26,11 @@ main {
     margin-bottom: 40px; /* Space between low and high resolution sections */
 }
 
-.refernce-image {
-    border: 2px solid black;
+.reference-image {
+    border: 2px solid #888;
     margin-bottom: 20px; /* Add space below the original image */
 }
+
 
 .other-images {
     display: flex;
@@ -60,5 +61,6 @@ main {
 }
 
 .other-images img {
-    border: 2px solid #888 /* Add a 2px solid border to the images */
+    border: 2px solid #888; /* Add a 2px solid border to the images */
+    margin-left: 5px;
 }

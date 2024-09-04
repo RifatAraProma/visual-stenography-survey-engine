@@ -33,7 +33,7 @@ for page in pages:
     page_dir = os.path.join(base_dir, page)
     
     # Iterate through subdirectories (except reference)
-    for subfolder in ['overwhelmed', 'replicator', 'trend_keeper']:
+    for subfolder in ['overwhelmed', 'replicator', 'trend keeper']:
         subfolder_path = os.path.join(page_dir, subfolder)
 
         if os.path.isdir(subfolder_path):
