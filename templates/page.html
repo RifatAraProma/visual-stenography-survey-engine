@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page {{ page_number }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form action="{{ url_for('page', page_number=page_number) }}" method="POST">
+        <div class="image-container" style="margin-top: 20px;">
+            
+            <!-- Header for the Reference Image -->
+            <h2>Reference</h2>
+            <div class="resolution-section">
+                {% if images.reference %}
+                    <img src="{{ url_for('static', filename=images.reference) }}" alt="Refernce Stimuli" class="reference-image">
+                {% endif %}
+            </div>
+
+            <!-- Header for the Sketches -->
+            <h2>Sketches</h2>
+
+            <div class="resolution-section">
+                <div class="other-images">
+                    {% for subfolder, image_path in images.items() %}
+                        {% if subfolder != 'reference' %}
+                        <div>
+                            <img src="{{ url_for('static', filename=image_path) }}" alt="{{ subfolder }}" class="other-images">
+                            
+                            <div class="label-group">
+                                <div class="favorite-label">
+                                    <label>
+                                        <input type="radio" name="favorite" value="{{ image_path }}" required>
+                                        Favorite
+                                    </label>
+                                </div>
+                                <div class="rank-label hidden">
+                                    <label>
+                                        Rank: <input type="number" name="rank_{{ image_path }}" min="1" max="4">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                        
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Textbox with First Question -->
+        <div class="question-box" style="margin-top: 30px;">
+            <h3>Please answer the following question:</h3>
+            <p>1) Based on the reference figure above, which sketch do you think you would create to represent it? mark it as favourite and explain why you chose it.</p>
+        </div>
+
+        <!-- Textbox with Second Question and Rank Labels (Initially Hidden) -->
+        <div class="hidden" id="second-question">
+            <div class="question-box" style="margin-top: 20px;">
+                <h3>Next Question:</h3>
+                <p>2) If you were to rank the sketches based on how well they capture the important properties of the reference figure, how would you rank them? Give a brief explanation to justify your ranking.</p>
+            </div>
+        </div>
+
+        <button type="submit" style="margin-top: 20px;">Next</button>
+    </form>
+
+    <script>
+        const favoriteButtons = document.querySelectorAll('input[name="favorite"]');
+        const secondQuestion = document.getElementById('second-question');
+        const rankLabels = document.querySelectorAll('.rank-label');
+
+        function checkInputs() {
+            const favoriteChecked = Array.from(favoriteButtons).some(button => button.checked);
+
+            if (favoriteChecked) {
+                // Show the second question and rank inputs
+                secondQuestion.classList.remove('hidden');
+                rankLabels.forEach(label => label.classList.remove('hidden'));
+            }
+        }
+
+        // Add event listeners to check conditions
+        favoriteButtons.forEach(button => {
+            button.addEventListener('change', checkInputs);
+        });
+
+        question1Textarea.addEventListener('input', checkInputs);
+    </script>
+</body>
+</html>
