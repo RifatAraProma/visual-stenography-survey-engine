@@ -9,15 +9,15 @@ output_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/Visual St
 
 # Define noise level selection for each dataset
 noise_levels = {
-    'Apple': 'high',
+    'Apple': 'mid',
     'Astro': 'high',
-    'Chi Homicide Monthly': 'max',
+    'Chi Homicide Monthly': 'high',
     'Climate': 'max',
-    'Doge': 'max',
-    'EEG': 'max',
-    'Flights Weekly': 'high',
+    'Doge': 'high',
+    'EEG': 'low',
+    'Flights Weekly': 'mid',
     'NZ Tourist Monthly': 'max', 
-    'Unemployment': 'high'  
+    'Unemployment': 'max'    
 }
 
 # Define the mapping of datasets to pages (Apple -> page1, Astro -> page2, etc.)

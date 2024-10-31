@@ -2,21 +2,21 @@ import os
 import shutil
 
 # Base input directories (adjust paths as needed)
-clusters_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/Supplemental Material/content/figures/clusters'
+clusters_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/What Do People see in Line Charts GitHub/Follow Up User Evaluation Design/Qualitative Analysis/Clusters/Combined'
 input_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/What Do People see in Line Charts GitHub/User Evaluation Results'  # Directory with original datasets
 output_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/Visual Stenography Survey/survey-engine/static/images'  # Directory with page1..page9
 
 # Define noise level selection for each dataset
 noise_levels = {
-    'Apple': 'high',
+    'Apple': 'mid',
     'Astro': 'high',
-    'Chi Homicide Monthly': 'max',
+    'Chi Homicide Monthly': 'high',
     'Climate': 'max',
-    'Doge': 'max',
-    'EEG': 'max',
-    'Flights Weekly': 'high',
+    'Doge': 'high',
+    'EEG': 'low',
+    'Flights Weekly': 'mid',
     'NZ Tourist Monthly': 'max', 
-    'Unemployment': 'high'  
+    'Unemployment': 'max'  
 }
 
 # Dictionary to map dataset names (for handling variations in naming)
@@ -46,11 +46,10 @@ dataset_to_page = {
 }
 
 # List of cluster types
-cluster_types = ['overwhelmed', 'replicator', 'trend keeper']
+cluster_types = ['replicator', 'de-noiser', 'trend keeper']
 
 # Function to find matching PNG and copy corresponding SVG
 def process_clusters_for_dataset(dataset, dataset_dir_name):
-    # Check for PNG files in each cluster subfolder (overwhelmed, replicator, trend_keeper)
     for cluster in cluster_types:
         cluster_path = os.path.join(clusters_dir, cluster)
 

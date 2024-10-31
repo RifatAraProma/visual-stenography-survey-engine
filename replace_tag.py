@@ -39,7 +39,7 @@ for page in pages:
         if os.path.isdir(subfolder_path):
             # Iterate over all SVG files in the subdirectory
             for file_name in os.listdir(subfolder_path):
-                if file_name.endswith('.svg'):
+                if file_name.endswith('.png'):
                     file_path = os.path.join(subfolder_path, file_name)
                     replace_svg_tag(file_path)
 

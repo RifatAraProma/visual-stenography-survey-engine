@@ -22,12 +22,12 @@ main {
 }
 
 .resolution-section {
-    width: 100%;
     margin-bottom: 40px; /* Space between low and high resolution sections */
 }
 
 .reference-image {
     border: 2px solid #888;
+    margin-left: 5px;
     margin-bottom: 20px; /* Add space below the original image */
 }
 
@@ -59,8 +59,133 @@ main {
     flex-wrap: wrap;
     justify-content: flex-start;
 }
+/* Hidden class for toggling visibility */
+.hidden {
+    display: none;
+}
 
-.other-images img {
-    border: 2px solid #888; /* Add a 2px solid border to the images */
-    margin-left: 5px;
+/* Reference image: Display at original size */
+.reference-image {
+    display: block;
+    margin: 0 auto; /* Center the reference image */
+    /* Ensure the image uses its original width and height */
+    width: auto;
+    height: auto;
+}
+
+/* Layout for the other images (Align sketches in the center) */
+.other-images-container {
+    display: flex;
+    justify-content: center; /* Align images in the middle */
+    gap: 20px; /* Add some space between images */
+    margin-top: 20px;
+}
+
+.image-option {
+    position: relative;
+    width: 30%; /* Ensure the images take up 30% of the available space */
+    height: auto;
+}
+
+/* Thumbnail styling */
+.image-option img {
+    width: 100%; /* Fit the container while keeping aspect ratio */
+    height: auto;
+    cursor: pointer;
+    border: 2px solid #888;
+}
+
+/* Full-size image container (hidden initially) */
+.full-size-image {
+    position: fixed; /* Fixed positioning ensures it stays relative to the viewport */
+    top: 70%;        /* Vertically center */
+    left: 50%;       /* Horizontally center */
+    transform: translate(-50%, -50%); /* Correctly center the image */
+    z-index: 10;
+    display: none;   /* Hidden by default */
+}
+
+/* Full-size image: Display at original size */
+.full-size-image img {
+    width: auto; /* Ensure the full-size image uses its original width */
+    height: auto; /* Ensure the full-size image uses its original height */
+    border: 2px solid #888;
+    background-color: white;
+}
+
+/* Button styling: Align Next button to the right */
+.next-button {
+    margin: 20px 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: rgb(5, 117, 196);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right; /* Align button to the right */
+}
+
+.next-button:disabled {
+    background-color: #888;
+}
+
+/* Styling for the warning text */
+.warning-text {
+    color: red;
+    margin-top: 30px;
+    float: right; /* Align button to the right */
+}
+
+/* Styling for ranking container */
+.ranking-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.ranking-container h2 {
+    text-align: center;
+}
+
+.rank-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.rank-list li {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: grab;
+}
+
+/* Styling for other features textbox */
+.other-features-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.other-features-container label {
+    margin-bottom: 5px;
+}
+
+.next-button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.next-button:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+    opacity: 0.6;
 }

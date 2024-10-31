@@ -6,8 +6,17 @@
     <title>Page {{ page_number }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
+        /* Ensure hidden class is defined */
         .hidden {
             display: none;
+        }
+
+        /* Style for the Next button when disabled */
+        .next-button:disabled {
+            background-color: grey;
+            color: white;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
     </style>
 </head>
@@ -16,81 +25,98 @@
         <div class="image-container" style="margin-top: 20px;">
             
             <!-- Header for the Reference Image -->
-            <h2>Reference</h2>
+            <h2>Reference</h2><h2 style="color: red;">(Visible for <span id="timer">10</span> seconds)</h2>
             <div class="resolution-section">
                 {% if images.reference %}
-                    <img src="{{ url_for('static', filename=images.reference) }}" alt="Refernce Stimuli" class="reference-image">
+                    <img src="{{ url_for('static', filename=images.reference) }}" alt="Reference Stimuli" class="reference-image" id="referenceImage">
                 {% endif %}
             </div>
 
-            <!-- Header for the Sketches -->
-            <h2>Sketches</h2>
-
-            <div class="resolution-section">
-                <div class="other-images">
+            <!-- Other Images (hidden initially) -->
+            <div id="sketches" class="hidden">
+                <h2 id="sketchesHeader">Sketches</h2>
+                <div class="other-images-container" id="otherImages">
                     {% for subfolder, image_path in images.items() %}
                         {% if subfolder != 'reference' %}
-                        <div>
-                            <img src="{{ url_for('static', filename=image_path) }}" alt="{{ subfolder }}" class="other-images">
-                            
-                            <div class="label-group">
-                                <div class="favorite-label">
-                                    <label>
-                                        <input type="radio" name="favorite" value="{{ image_path }}" required>
-                                        Favorite
-                                    </label>
-                                </div>
-                                <div class="rank-label hidden">
-                                    <label>
-                                        Rank: <input type="number" name="rank_{{ image_path }}" min="1" max="4">
-                                    </label>
-                                </div>
+                        <div class="image-option">
+                            <label>
+                                <input type="radio" name="selected_sketch" value="{{ subfolder }}" data-image-name="{{ image_path }}">
+                                This sketch captures the important features of the reference figure.
+                            </label>
+                            <img src="{{ url_for('static', filename=image_path) }}" alt="{{ subfolder }}">
+                            <div class="full-size-image">
+                                <img src="{{ url_for('static', filename=image_path) }}" alt="Full Size Image">
                             </div>
-                        </div>                        
+                        </div>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-        </div>
 
-        <!-- Textbox with First Question -->
-        <div class="question-box" style="margin-top: 30px;">
-            <h3>Please answer the following question:</h3>
-            <p>1) Based on the reference figure above, which sketch do you think you would create to represent it? mark it as favourite and explain why you chose it.</p>
-        </div>
+            <!-- Hidden Input to Store Selected Image Name -->
+            <input type="hidden" name="selected_image_name" id="selectedImageName">
 
-        <!-- Textbox with Second Question and Rank Labels (Initially Hidden) -->
-        <div class="hidden" id="second-question">
-            <div class="question-box" style="margin-top: 20px;">
-                <h3>Next Question:</h3>
-                <p>2) If you were to rank the sketches based on how well they capture the important properties of the reference figure, how would you rank them? Give a brief explanation to justify your ranking.</p>
+            <!-- Follow-up Question (hidden initially) -->
+            <div id="followUpQuestion" class="hidden" style="margin-top: 15px;">
+                <label for="reason">What is the reason behind your choice?</label>
             </div>
         </div>
 
-        <button type="submit" style="margin-top: 20px;">Next</button>
+        <button type="submit" class="next-button" id="nextButton" disabled>Next</button>
+         <!-- Warning Text Below the Next Button -->
+         <p class="warning-text">Do not click this button until you are instructed to do so!</p>
     </form>
 
     <script>
-        const favoriteButtons = document.querySelectorAll('input[name="favorite"]');
-        const secondQuestion = document.getElementById('second-question');
-        const rankLabels = document.querySelectorAll('.rank-label');
+        const referenceImage = document.getElementById('referenceImage');
+        const sketchesDiv = document.getElementById('sketches');
+        const timerElement = document.getElementById('timer');
+        const followUpQuestion = document.getElementById('followUpQuestion');
+        const nextButton = document.getElementById('nextButton');
+        const radioButtons = document.querySelectorAll('input[name="selected_sketch"]');
+        const selectedImageNameInput = document.getElementById('selectedImageName');
 
-        function checkInputs() {
-            const favoriteChecked = Array.from(favoriteButtons).some(button => button.checked);
+        let countdown = 10;
 
-            if (favoriteChecked) {
-                // Show the second question and rank inputs
-                secondQuestion.classList.remove('hidden');
-                rankLabels.forEach(label => label.classList.remove('hidden'));
+        // Function to update the countdown timer and hide the reference image after 10 seconds
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            timerElement.textContent = countdown;
+
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                referenceImage.classList.add('hidden');  // Hide the reference image after 10 seconds
+                sketchesDiv.classList.remove('hidden');  // Show the sketches div after reference disappears
             }
-        }
+        }, 1000);  // Update every second
 
-        // Add event listeners to check conditions
-        favoriteButtons.forEach(button => {
-            button.addEventListener('change', checkInputs);
+        // Display follow-up question, enable next button, and update hidden input after a selection
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                followUpQuestion.classList.remove('hidden');  // Show the follow-up question
+                nextButton.disabled = false;  // Enable the Next button
+
+                // Set the hidden input with the full image name
+                selectedImageNameInput.value = radio.getAttribute('data-image-name');
+            });
         });
 
-        question1Textarea.addEventListener('input', checkInputs);
+        // Full-size image hover logic
+        const imageOptions = document.querySelectorAll('.image-option');
+        imageOptions.forEach(option => {
+            const fullSizeImage = option.querySelector('.full-size-image');
+            const thumbnail = option.querySelector('img');
+
+            // Show full-size image when hovering on thumbnail
+            thumbnail.addEventListener('mouseenter', () => {
+                fullSizeImage.style.display = 'block';
+            });
+
+            // Hide full-size image when not hovering
+            thumbnail.addEventListener('mouseleave', () => {
+                fullSizeImage.style.display = 'none';
+            });
+        });
     </script>
 </body>
 </html>
