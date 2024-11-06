@@ -25,23 +25,25 @@
         <div class="image-container" style="margin-top: 20px;">
             
             <!-- Header for the Reference Image -->
-            <h2>Reference</h2><h2 style="color: red;">(Visible for <span id="timer">10</span> seconds)</h2>
-            <div class="resolution-section">
-                {% if images.reference %}
-                    <img src="{{ url_for('static', filename=images.reference) }}" alt="Reference Stimuli" class="reference-image" id="referenceImage">
-                {% endif %}
+             <div id="reference-container">
+                <h2>Reference</h2><h2 style="color: red;">(Visible for <span id="timer">10</span> seconds)</h2>
+                <div class="resolution-section">
+                    {% if images.reference %}
+                        <img src="{{ url_for('static', filename=images.reference) }}" alt="Reference Stimuli" class="reference-image" id="referenceImage">
+                    {% endif %}
+                </div>
             </div>
 
             <!-- Other Images (hidden initially) -->
             <div id="sketches" class="hidden">
                 <h2 id="sketchesHeader">Sketches</h2>
+                <h3 style="text-align: center;">If you were to sketch the reference image shown previously, which one would you like to sketch?</h3>
                 <div class="other-images-container" id="otherImages">
                     {% for subfolder, image_path in images.items() %}
                         {% if subfolder != 'reference' %}
                         <div class="image-option">
                             <label>
                                 <input type="radio" name="selected_sketch" value="{{ subfolder }}" data-image-name="{{ image_path }}">
-                                This sketch captures the important features of the reference figure.
                             </label>
                             <img src="{{ url_for('static', filename=image_path) }}" alt="{{ subfolder }}">
                             <div class="full-size-image">
@@ -62,61 +64,96 @@
             </div>
         </div>
 
-        <button type="submit" class="next-button" id="nextButton" disabled>Next</button>
-         <!-- Warning Text Below the Next Button -->
-         <p class="warning-text">Do not click this button until you are instructed to do so!</p>
+        <div id="next-container" type="hidden">
+            <button type="submit" class="next-button" id="nextButton" disabled>Next</button>
+            <!-- Warning Text Below the Next Button -->
+            <p class="warning-text">Do not click this button until you are instructed to do so!</p>
+        </div>
     </form>
 
     <script>
         const referenceImage = document.getElementById('referenceImage');
+        const referenceContainer = document.getElementById('reference-container');
         const sketchesDiv = document.getElementById('sketches');
         const timerElement = document.getElementById('timer');
         const followUpQuestion = document.getElementById('followUpQuestion');
         const nextButton = document.getElementById('nextButton');
         const radioButtons = document.querySelectorAll('input[name="selected_sketch"]');
         const selectedImageNameInput = document.getElementById('selectedImageName');
+        const nextContainer = document.getElementById('next-container');
+    
+        let countdown = 1;
+        
+        // Timer display element for the Next button countdown
+        const nextButtonTimer = document.createElement('p');
+        nextButtonTimer.id = 'nextButtonTimer';
+        nextButtonTimer.style.marginTop = '10px';
+        nextButtonTimer.style.fontWeight = 'bold';
+        nextButtonTimer.style.color = 'red';
+        nextButtonTimer.align ='right'
+        nextButton.insertAdjacentElement('beforebegin', nextButtonTimer); // Insert the timer above the Next button
 
-        let countdown = 10;
 
         // Function to update the countdown timer and hide the reference image after 10 seconds
         const countdownInterval = setInterval(() => {
             countdown--;
             timerElement.textContent = countdown;
-
+    
             if (countdown <= 0) {
                 clearInterval(countdownInterval);
+                referenceContainer.classList.add('hidden')
                 referenceImage.classList.add('hidden');  // Hide the reference image after 10 seconds
                 sketchesDiv.classList.remove('hidden');  // Show the sketches div after reference disappears
+                nextContainer.classList.remove('hidden');
             }
         }, 1000);  // Update every second
 
-        // Display follow-up question, enable next button, and update hidden input after a selection
+         // Function to start a visible 15-second countdown for the Next button
+        const enableNextButtonWithCountdown = () => {
+            let nextButtonCountdown = 1;
+            nextButtonTimer.textContent = `Next button available in ${nextButtonCountdown} seconds...`;
+
+            const nextButtonInterval = setInterval(() => {
+                nextButtonCountdown--;
+                nextButtonTimer.textContent = `Next button available in ${nextButtonCountdown} seconds...`;
+
+                if (nextButtonCountdown <= 0) {
+                    clearInterval(nextButtonInterval);
+                    nextButton.disabled = false;
+                    nextButtonTimer.textContent = "Next button is now available!";
+                }
+            }, 1000); // Update every second
+        };
+    
+        // Delay enabling the Next button by 15 seconds after a selection
         radioButtons.forEach(radio => {
             radio.addEventListener('change', () => {
                 followUpQuestion.classList.remove('hidden');  // Show the follow-up question
-                nextButton.disabled = false;  // Enable the Next button
-
-                // Set the hidden input with the full image name
                 selectedImageNameInput.value = radio.getAttribute('data-image-name');
+    
+                // Disable the button immediately after selection, start a 15-second timer
+                nextButton.disabled = true;
+                enableNextButtonWithCountdown();
             });
         });
-
+    
         // Full-size image hover logic
         const imageOptions = document.querySelectorAll('.image-option');
         imageOptions.forEach(option => {
             const fullSizeImage = option.querySelector('.full-size-image');
             const thumbnail = option.querySelector('img');
-
+    
             // Show full-size image when hovering on thumbnail
             thumbnail.addEventListener('mouseenter', () => {
                 fullSizeImage.style.display = 'block';
             });
-
+    
             // Hide full-size image when not hovering
             thumbnail.addEventListener('mouseleave', () => {
                 fullSizeImage.style.display = 'none';
             });
         });
     </script>
+    
 </body>
 </html>

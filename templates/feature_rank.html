@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rank Line Chart Features</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="ranking-container">
+        <h2>Rank Features of Line Charts</h2>
+        <p>Drag and drop the following features to rank them from highest to lowest priority:</p>
+
+        <form action="{{ url_for('feature_rank') }}" method="POST">
+            <ul id="rankList" class="rank-list">
+                <li draggable="true" data-feature="trend">Trend</li>
+                <li draggable="true" data-feature="periodicity">Periodicity</li>
+                <li draggable="true" data-feature="peaks_valleys">Peaks and Valleys</li>
+                <li draggable="true" data-feature="noise">Noise</li>
+            </ul>
+
+            <input type="hidden" id="rankedFeatures" name="ranked_features">
+
+            <!-- Additional features textbox -->
+            <div class="other-features-container">
+                <label for="otherFeatures">What other features do you think are important when viewing a line chart?</label>
+            </div>
+
+            <button type="submit" class="next-button">Next</button>
+        </form>
+    </div>
+
+    <script>
+        const rankList = document.getElementById("rankList");
+        const rankedFeaturesInput = document.getElementById("rankedFeatures");
+
+        // Drag-and-drop reordering
+        let draggedItem = null;
+
+        rankList.addEventListener("dragstart", (event) => {
+            draggedItem = event.target;
+            setTimeout(() => {
+                event.target.style.display = "none";
+            }, 0);
+        });
+
+        rankList.addEventListener("dragend", (event) => {
+            setTimeout(() => {
+                draggedItem.style.display = "block";
+                draggedItem = null;
+            }, 0);
+        });
+
+        rankList.addEventListener("dragover", (event) => {
+            event.preventDefault();
+        });
+
+        rankList.addEventListener("dragenter", (event) => {
+            if (event.target.tagName === "LI" && event.target !== draggedItem) {
+                event.target.style.border = "1px dashed #000";
+            }
+        });
+
+        rankList.addEventListener("dragleave", (event) => {
+            if (event.target.tagName === "LI") {
+                event.target.style.border = "1px solid #ccc";
+            }
+        });
+
+        rankList.addEventListener("drop", (event) => {
+            if (event.target.tagName === "LI" && event.target !== draggedItem) {
+                event.target.style.border = "1px solid #ccc";
+                rankList.insertBefore(draggedItem, event.target.nextSibling);
+            }
+        });
+
+        // Capture ranked order before form submission
+        document.querySelector("form").addEventListener("submit", (event) => {
+            const rankedFeatures = Array.from(rankList.children).map(item => item.getAttribute("data-feature"));
+            rankedFeaturesInput.value = JSON.stringify(rankedFeatures);
+        });
+    </script>
+
+</body>
+</html>

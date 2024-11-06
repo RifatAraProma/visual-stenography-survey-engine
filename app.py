@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, R
 import os
 import random
 import json
+import datetime
 
 app = Flask(__name__)
 
@@ -22,7 +23,9 @@ def init_db():
     conn.commit()
     conn.close()
 
-
+# Helper function to get current timestamp
+def get_timestamp():
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 # Load rotation indexes from the database
 def load_rotation_tracker():
@@ -87,6 +90,7 @@ def index():
     if request.method == 'POST':
         name = request.form['name']
         user_data['name'] = name
+        user_data['timestamps'] = {'name_entered': get_timestamp()}  # Save timestamp
         return redirect(url_for('page', page_number=1))
     return render_template('base.html')
 
@@ -94,6 +98,7 @@ def index():
 def page(page_number):
     if request.method == 'POST':
         user_data[f'page_{page_number}'] = request.form.to_dict()
+        user_data['timestamps'][f'page_{page_number}_submitted'] = get_timestamp()
 
         if page_number < 9:
             return redirect(url_for('page', page_number=page_number + 1))
@@ -109,6 +114,8 @@ def feature_rank():
         # Save the feature ranking and additional comments from the form
         user_data['feature_ranking'] = request.form.get('ranked_features')
         user_data['other_features'] = request.form.get('other_features')
+        
+        user_data['timestamps']['feature_rank_submitted'] = get_timestamp()
         return redirect(url_for('complete'))
     
     return render_template('feature_rank.html')
@@ -116,6 +123,7 @@ def feature_rank():
 @app.route('/complete', methods=['GET', 'POST'])
 def complete():
     if request.method == 'POST':
+        user_data['timestamps']['complete_downloaded'] = get_timestamp()
         return save_and_download_json(user_data)
 
     return render_template('complete.html')
