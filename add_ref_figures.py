@@ -5,7 +5,7 @@ import shutil
 input_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/What Do People see in Line Charts GitHub/User Evaluation Design/stimuli organized by dataset'
 
 # Define the base output directory (where 'page1', 'page2', etc. are located)
-output_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/Visual Stenography Survey/survey-engine/static/images'
+output_dir = './static/images'
 
 # Define noise level selection for each dataset
 noise_levels = {

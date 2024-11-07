@@ -4,7 +4,7 @@ import shutil
 # Base input directories (adjust paths as needed)
 clusters_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/What Do People see in Line Charts GitHub/Follow Up User Evaluation Design/Qualitative Analysis/Clusters/Combined'
 input_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/What Do People see in Line Charts GitHub/User Evaluation Results'  # Directory with original datasets
-output_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/Visual Stenography Survey/survey-engine/static/images'  # Directory with page1..page9
+output_dir = 'C:/Users/rifat/OneDrive/Documents/Research/Temporal data/Visual Stenography Survey/vsse/static/images'  # Directory with page1..page9
 
 # Define noise level selection for each dataset
 noise_levels = {
