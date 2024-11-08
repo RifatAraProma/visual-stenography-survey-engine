@@ -98,6 +98,8 @@ def index():
 def page(page_number):
     if request.method == 'POST':
         user_data[f'page_{page_number}'] = request.form.to_dict()
+        if 'timestamps' not in user_data:
+            user_data['timestamps'] = {}
         user_data['timestamps'][f'page_{page_number}_submitted'] = get_timestamp()
 
         if page_number < 9:
