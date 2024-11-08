@@ -88,8 +88,6 @@ def get_images(page_number):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        name = request.form['name']
-        user_data['name'] = name
         user_data['timestamps'] = {'name_entered': get_timestamp()}  # Save timestamp
         return redirect(url_for('page', page_number=1))
     return render_template('base.html')
