@@ -82,7 +82,7 @@
         const selectedImageNameInput = document.getElementById('selectedImageName');
         const nextContainer = document.getElementById('next-container');
     
-        let countdown = 1;
+        let countdown = 10;
         
         // Timer display element for the Next button countdown
         const nextButtonTimer = document.createElement('p');
@@ -110,7 +110,7 @@
 
          // Function to start a visible 15-second countdown for the Next button
         const enableNextButtonWithCountdown = () => {
-            let nextButtonCountdown = 1;
+            let nextButtonCountdown = 15;
             nextButtonTimer.textContent = `Next button available in ${nextButtonCountdown} seconds...`;
 
             const nextButtonInterval = setInterval(() => {
