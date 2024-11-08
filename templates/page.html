@@ -82,7 +82,7 @@
         const selectedImageNameInput = document.getElementById('selectedImageName');
         const nextContainer = document.getElementById('next-container');
     
-        let countdown = 10;
+        let countdown = 1;
         
         // Timer display element for the Next button countdown
         const nextButtonTimer = document.createElement('p');
@@ -110,7 +110,7 @@
 
          // Function to start a visible 15-second countdown for the Next button
         const enableNextButtonWithCountdown = () => {
-            let nextButtonCountdown = 15;
+            let nextButtonCountdown = 1;
             nextButtonTimer.textContent = `Next button available in ${nextButtonCountdown} seconds...`;
 
             const nextButtonInterval = setInterval(() => {
@@ -127,7 +127,7 @@
     
         // Delay enabling the Next button by 15 seconds after a selection
         radioButtons.forEach(radio => {
-            radio.addEventListener('change', () => {
+            radio.addEventListener('click', () => {
                 followUpQuestion.classList.remove('hidden');  // Show the follow-up question
                 selectedImageNameInput.value = radio.getAttribute('data-image-name');
     
